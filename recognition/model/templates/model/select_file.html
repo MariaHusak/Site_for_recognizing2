@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select</title>
+</head>
+<body>
+<h2>Оберіть файл для сегментації</h2>
+<ul>
+    {% for file in files %}
+        <li>
+            {{ file.file.name }}
+            <a href="{% url 'segment_file' file.id %}">Сегментувати</a>
+        </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

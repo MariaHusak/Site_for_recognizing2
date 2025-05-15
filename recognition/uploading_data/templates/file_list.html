@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}File List{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/file_list_style.css' %}">
+  <h2>My files</h2>
+  <ul>
+    {% for file in files %}
+      <li>
+        <a href="{{ file.file.url }}">{{ file.file.name }}</a> ({{ file.uploaded_at }})
+        <form method="post" action="{% url 'delete_file' file.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="delete-btn">Delete</button>
+        </form>
+      </li>
+    {% empty %}
+      <li>No files uploaded yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
