@@ -1,0 +1,79 @@
+services:
+  backend:
+    build:
+      context: ./recognition
+      dockerfile: Dockerfile
+    container_name: recognition
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "./scripts/wait-for-db.sh &&
+             ./scripts/run-tests.sh &&
+             python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./recognition:/app-recognition
+      - coverage_data:/coverage
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.5-alpine3.18
+    container_name: db
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      SONAR_JDBC_USERNAME: ${SONAR_JDBC_USERNAME}
+      SONAR_JDBC_PASSWORD: ${SONAR_JDBC_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./recognition/scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_JDBC_URL=${SONAR_JDBC_URL}
+      - SONAR_JDBC_USERNAME=${SONAR_JDBC_USERNAME}
+      - SONAR_JDBC_PASSWORD=${SONAR_JDBC_PASSWORD}
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+    depends_on:
+      - db
+
+  sonarscanner:
+    image: sonarsource/sonar-scanner-cli:latest
+    container_name: sonarscanner
+    environment:
+      - SONAR_HOST_URL=${SONAR_HOST_URL}
+      - SONAR_LOGIN=${SONAR_TOKEN}
+    volumes:
+      - ./:/usr/src/
+      - coverage_data:/coverage
+    depends_on:
+      - sonarqube
+    command: >
+      sh -c "./market/scripts/wait-for-sonar.sh sonarqube:9000 &&
+             sonar-scanner -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.projectName=$SONAR_PROJECT_NAME -Dsonar.sources=market/online_market,market/market -Dsonar.language=py -Dsonar.exclusions=**/migrations/**,**/__pycache__/**,**/*.pyc,db.sqlite3 -Dsonar.python.version=3.11 -Dsonar.python.coverage.reportPaths=/coverage/coverage.xml"
+    restart: "no"
+    networks:
+      - default
+
+volumes:
+  postgres_data:
+  sonarqube_data:
+  sonarqube_logs:
+  coverage_data:
+
+networks:
+  default:
+    driver: bridge
