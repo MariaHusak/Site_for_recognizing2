@@ -10,15 +10,22 @@ services:
       - "8000:8000"
     command: >
       sh -c "./scripts/wait-for-db.sh &&
-             ./scripts/run-tests.sh &&
-             python manage.py makemigrations &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./recognition:/app-recognition
       - coverage_data:/coverage
+      - media_data:/app-recognition/media
     depends_on:
       - db
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   db:
     image: postgres:15.5-alpine3.18
@@ -62,17 +69,16 @@ services:
     depends_on:
       - sonarqube
     command: >
-      sh -c "./market/scripts/wait-for-sonar.sh sonarqube:9000 &&
-             sonar-scanner -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.projectName=$SONAR_PROJECT_NAME -Dsonar.sources=market/online_market,market/market -Dsonar.language=py -Dsonar.exclusions=**/migrations/**,**/__pycache__/**,**/*.pyc,db.sqlite3 -Dsonar.python.version=3.11 -Dsonar.python.coverage.reportPaths=/coverage/coverage.xml"
+      sh -c "./recognition/scripts/wait-for-sonar.sh sonarqube:9000 &&
+      sonar-scanner -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.projectName=$SONAR_PROJECT_NAME -Dsonar.sources=market/online_market,market/market -Dsonar.language=py -Dsonar.exclusions=**/migrations/**,**/**pycache**/**,**/*.pyc,db.sqlite3 -Dsonar.python.version=3.11 -Dsonar.python.coverage.reportPaths=/coverage/coverage.xml"
     restart: "no"
-    networks:
-      - default
 
 volumes:
   postgres_data:
   sonarqube_data:
   sonarqube_logs:
   coverage_data:
+  media_data:
 
 networks:
   default:
