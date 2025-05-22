@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Select</title>
-</head>
-<body>
-<h2>Оберіть файл для сегментації</h2>
-<ul>
-    {% for file in files %}
-        <li>
-            {{ file.file.name }}
-            <a href="{% url 'segment_file' file.id %}">Сегментувати</a>
-        </li>
-    {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Select file{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/result_video.css' %}">
+  <h2>Select a file to segment</h2>
+  <ul style="list-style-type: none; padding-left: 0;">
+    {% for file in files %}
+      <li style="margin-bottom: 10px;">
+        {{ file.filename }}
+        <a href="{% url 'segment_file' file.id %}" class="segment-button">Segment</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Result</title>
-</head>
-<body>
-<h2>Результат сегментації</h2>
-<img src="{{ result_url }}" alt="Segmented Result" style="max-width: 500px;">
-<br>
-<a href="{{ result_url }}" download>Завантажити</a>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Segmentation result{% endblock %}
+
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/result_style.css' %}">
+  <img src="{{ result_url }}" alt="Segmented Result" style="max-width: 500px;">
+  <br>
+  <a href="{{ result_url }}" download class="segment-button">Download</a>
+  <a href="{% url 'select_file' %}" class="segment-button">Process another file</a>
+{% endblock %}

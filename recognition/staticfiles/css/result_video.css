@@ -1,0 +1,31 @@
+.segment-button {
+        display: inline-block;
+        background-color: #1a56db;
+        color: white;
+        padding: 8px 16px;
+        margin: 5px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .segment-button:hover {
+      background-color: #1649b8;
+    }
+
+    .highlighted-button {
+        background-color: #1a56db;
+    }
+
+    .highlighted-button:hover {
+      background-color: #1649b8;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }

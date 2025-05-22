@@ -1,17 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Video</title>
-</head>
-<body>
- <h2>Результат сегментації відео</h2>
-<video width="640" height="360" controls>
-    <source src="{{ result_url }}" type="video/mp4">
-    Ваш браузер не підтримує відео.
-</video>
-<br>
-<a href="{{ result_url }}" download>Завантажити відео</a>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/result_video.css' %}">
+<script src="{% static 'js/result_video.js' %}"></script>
+<div class="container mt-4">
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <video id="videoPlayer" controls width="100%" poster="{{ result_url }}.jpg" class="shadow">
+                    <source src="{{ result_url }}" type="video/mp4">
+                    <source src="{{ result_url }}" type="video/webm">
+                    <p>Your browser does not support video playback.
+                        <a href="{% url 'download_video' result_url|slice:'7:' %}" class="segment-button">Download video</a>
+                    </p>
+                </video>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'download_video' result_url|slice:'7:' %}" class="segment-button" id="downloadBtn">
+                    <i class="fas fa-download"></i> Download video
+                </a>
+                <a href="{% url 'select_file' %}" class="segment-button">
+                    <i class="fas fa-redo"></i> Process another file
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
