@@ -35,6 +35,12 @@ SONAR_JDBC_PASSWORD=sonar_password
 ```
 Run project in the root directory, using command: ``` docker-compose up --build ```
 
+Open links in browser:
+
+Application: http://localhost:8000
+
+SonarQube: http://localhost:9000
+
 ### Project Structure
 
 ```
