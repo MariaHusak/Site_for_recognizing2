@@ -7,8 +7,11 @@
 
 ### Getting Started
 ##### To run project locally, follow next steps:
+
 Clone the repository: ``` git clone https://github.com/MariaHusak/Site_for_recognizing2.git ```
+
 Create a ```.env``` file in the root directory, for example:
+
 ```
 SECRET_KEY =your_django_secret_key
 EMAIL_HOST_PASSWORD =your_email_password
@@ -31,7 +34,8 @@ SONAR_JDBC_PASSWORD=sonar_password
 
 ```
 Run project in the root directory, using command: ``` docker-compose up --build ```
-###Project Structure
+
+### Project Structure
 
 ```
 Site_for_recognizing2/
