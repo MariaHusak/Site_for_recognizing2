@@ -64,3 +64,7 @@ Site_for_recognizing2/
 │   └─── user/
 └── README.md
 ```
+
+### Architecture Diagram
+
+![Architecture](images/architecture.png)
