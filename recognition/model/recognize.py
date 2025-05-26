@@ -20,7 +20,7 @@ class Model:
     def _initialize_config(self):
         self.cfg = get_cfg()
         self.cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
-        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+        self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.8
         self.cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
         self.cfg.MODEL.WEIGHTS = os.path.join(settings.BASE_DIR, 'model_final.pth')
         self.cfg.MODEL.DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -300,7 +300,7 @@ class Video:
         try:
             import shutil
             shutil.rmtree(temp_dir)
-        except:
+        except SystemExit:
             pass
 
 

@@ -5,8 +5,15 @@
 
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/result_style.css' %}">
-  <img src="{{ result_url }}" alt="Segmented Result" style="max-width: 500px;">
-  <br>
-  <a href="{{ result_url }}" download class="segment-button">Download</a>
-  <a href="{% url 'select_file' %}" class="segment-button">Process another file</a>
+
+  <div class="result-wrapper">
+    <div class="image-container">
+      <img src="{{ result_url }}" alt="Segmented Result" class="result-image">
+    </div>
+
+    <div class="button-container">
+      <a href="{{ result_url }}" download class="segment-button">Download</a>
+      <a href="{% url 'select_file' %}" class="segment-button">Process another file</a>
+    </div>
+  </div>
 {% endblock %}

@@ -10,6 +10,7 @@ services:
       - "8000:8000"
     command: >
       sh -c "./scripts/wait-for-db.sh &&
+      ./scripts/run-tests.sh &&
       python manage.py makemigrations &&
       python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000"
@@ -70,7 +71,7 @@ services:
       - sonarqube
     command: >
       sh -c "./recognition/scripts/wait-for-sonar.sh sonarqube:9000 &&
-      sonar-scanner -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.projectName=$SONAR_PROJECT_NAME -Dsonar.sources=market/online_market,market/market -Dsonar.language=py -Dsonar.exclusions=**/migrations/**,**/**pycache**/**,**/*.pyc,db.sqlite3 -Dsonar.python.version=3.11 -Dsonar.python.coverage.reportPaths=/coverage/coverage.xml"
+      sonar-scanner -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.projectName=$SONAR_PROJECT_NAME -Dsonar.sources=recognition/model,recognition/recognition,recognition/user,recognition/uploading_data -Dsonar.language=py -Dsonar.exclusions=**/migrations/**,**/**pycache**/**,**/*.pyc,db.sqlite3 -Dsonar.coverage.exclusions=**/tests.py,**/test_*.py,**/*_test.py,**/*.js -Dsonar.python.version=3.11 -Dsonar.python.coverage.reportPaths=/coverage/coverage.xml"
     restart: "no"
 
 volumes:

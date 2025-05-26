@@ -1,4 +1,3 @@
-*.pth
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -191,9 +190,11 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
+*.coverage
+*.pth
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-/backend/.scannerwork/.sonar_lock
-/backend/.scannerwork/report-task.txt
+/.scannerwork/.sonar_lock
+/.scannerwork/report-task.txt
