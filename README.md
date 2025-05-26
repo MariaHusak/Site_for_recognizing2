@@ -40,7 +40,6 @@ Run project in the root directory, using command: ``` docker-compose up --build 
 ```
 Site_for_recognizing2/
 ├── Dockerfile
-├── README.md
 ├── docker-compose.yml
 ├── manage.py
 ├── requirements.txt
@@ -57,5 +56,5 @@ Site_for_recognizing2/
 │   │   ├── js/
 │   ├── uploading_data/
 │   └─── user/
-
+└── README.md
 ```
