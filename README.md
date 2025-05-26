@@ -67,4 +67,4 @@ Site_for_recognizing2/
 
 ### Architecture Diagram
 
-![Architecture](images/architecture.png)
+![Architecture](images/architecture-diagram.png)
