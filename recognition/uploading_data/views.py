@@ -11,21 +11,41 @@ def main(request):
     return render(request, 'main.html')
 
 
+def _create_uploaded_file_instance(user, uploaded_file):
+    return UploadedFile(
+        user=user,
+        filename=uploaded_file.name,
+        file_data=uploaded_file.read(),
+        content_type=uploaded_file.content_type
+    )
+
+
+def _handle_file_upload_post(request):
+    form = UploadFileForm(request.POST, request.FILES)
+    if form.is_valid():
+        uploaded_file_instance = _create_uploaded_file_instance(
+            request.user,
+            request.FILES['file']
+        )
+        uploaded_file_instance.save()
+        return redirect('file_list')
+    return form
+
+
+def _handle_file_upload_get():
+    return UploadFileForm()
+
+
 @login_required
 def upload_file(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            uploaded_file = UploadedFile(
-                user=request.user,
-                filename=request.FILES['file'].name,
-                file_data=request.FILES['file'].read(),
-                content_type=request.FILES['file'].content_type
-            )
-            uploaded_file.save()
-            return redirect('file_list')
+        form_or_redirect = _handle_file_upload_post(request)
+        if isinstance(form_or_redirect, HttpResponse):
+            return form_or_redirect
+        form = form_or_redirect
     else:
-        form = UploadFileForm()
+        form = _handle_file_upload_get()
+
     return render(request, 'upload.html', {'form': form})
 
 

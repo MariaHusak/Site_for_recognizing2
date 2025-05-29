@@ -115,8 +115,6 @@ class Video:
         try:
             if self._check_ffmpeg():
                 return self._process_with_ffmpeg(video_path, output_path, frames_dir)
-            elif self._has_ffmpeg_python():
-                return self._process_with_ffmpeg_python(video_path, output_path, frames_dir)
             else:
                 return self._process_with_opencv(video_path, output_path, temp_dir)
         except Exception as e:
@@ -129,13 +127,6 @@ class Video:
             subprocess.run(['ffmpeg', '-version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             return True
         except (subprocess.SubprocessError, FileNotFoundError):
-            return False
-
-    def _has_ffmpeg_python(self):
-        try:
-            import ffmpeg
-            return True
-        except ImportError:
             return False
 
     def _process_with_ffmpeg(self, video_path, output_path, frames_dir):
@@ -160,26 +151,6 @@ class Video:
             return output_path
         else:
             return None
-
-    def _process_with_ffmpeg_python(self, video_path, output_path, frames_dir):
-        import ffmpeg
-
-        video_info = self._segment_frames(video_path, frames_dir)
-
-        (
-            ffmpeg
-            .input(os.path.join(frames_dir, 'frame_%06d.jpg'), framerate=video_info['fps'])
-            .output(output_path,
-                    vcodec='libx264',
-                    pix_fmt='yuv420p',
-                    preset='medium',
-                    crf=23,
-                    movflags='+faststart')
-            .overwrite_output()
-            .run()
-        )
-
-        return output_path
 
     def _process_with_opencv(self, video_path, output_path, temp_dir):
         temp_output = os.path.join(temp_dir, "output_opencv.avi")
